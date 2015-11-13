@@ -29,4 +29,3 @@ validate "config.json" "$SCHEMA_DIR/config-schema.json";
 validate "package.json" "$SCHEMA_DIR/package-schema.json";
 
 echo "OK";
-

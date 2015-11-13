@@ -1,0 +1,34 @@
+{
+    "id": "{{spark.framework-name}}",
+    "cpus": {{spark.cpus}},
+    "mem": {{spark.mem}},
+    "instances": {{spark.instances}},
+    "cmd": "cd {{spark.dist}} && mv $MESOS_DIRECTORY/log4j.properties conf/log4j.properties && JAVA_HOME=$MESOS_DIRECTORY/jre1.7.0_76 ./bin/spark-class org.apache.spark.deploy.mesos.MesosClusterDispatcher --port $PORT0 --webui-port $PORT1 --master {{mesos.master}} --zk {{spark.zookeeper}} --host {{spark.host}} --name {{spark.framework-name}}",
+    "uris": [
+        "https://downloads.mesosphere.io/java/jre-7u76-linux-x64.tar.gz",
+        "http://downloads.mesosphere.com.s3.amazonaws.com/assets/spark/log4j.properties",
+        "https://downloads.mesosphere.io/dcos/spark/{{spark.dist}}.tgz"
+    ],
+    "env": {
+        "APPLICATION_WEB_PROXY_BASE": "/service/spark",
+        "SPARK_USER": "{{spark.mesos-user}}"
+    },
+    "ports": [
+        0,
+        0
+    ],
+    "healthChecks": [
+        {
+            "path": "/",
+            "portIndex": 1,
+            "protocol": "HTTP",
+            "gracePeriodSeconds": 5,
+            "intervalSeconds": 60,
+            "timeoutSeconds": 10,
+            "maxConsecutiveFailures": 3
+        }
+    ],
+    "labels": {
+        "SPARK_URI": "https://downloads.mesosphere.io/dcos/spark/{{spark.dist}}.tgz"
+    }
+}
